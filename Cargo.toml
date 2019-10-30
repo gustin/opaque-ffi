@@ -1,0 +1,13 @@
+[package]
+name = "ffi"
+version = "0.1.0"
+authors = ["gustin <gustin@users.noreply.github.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["dylib"]
+
+[dependencies]
+rand = "*"
+ed25519-dalek = "1.0.0-pre.1"
+
