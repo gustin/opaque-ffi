@@ -11,5 +11,7 @@ crate-type = ["dylib"]
 ed25519-dalek = "1.0.0-pre.1"
 rand = "*"
 rocksdb = "0.12.4"
+qrcodegen = "1.5.0"
+slauth = "0.4.4"
 
 

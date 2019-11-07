@@ -3,6 +3,7 @@ use ed25519_dalek::{Digest, Keypair};
 use rand::rngs::OsRng;
 use std::str;
 
+mod authenticators;
 mod storage;
 
 #[no_mangle]
