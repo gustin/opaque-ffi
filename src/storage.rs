@@ -2,21 +2,22 @@ use rocksdb::*;
 use std::path::{Path, PathBuf};
 use std::str;
 
-fn store(key, value) {
+fn store(key: &str, value: &str) {
     let path = Path::new("_plaintext");
     let db = DB::open_default(&path).unwrap();
 
-    db.put(key, value);
+    db.put(key.as_bytes(), value.as_bytes());
 }
-
 
 #[test]
 fn test_storing_data() {
-    store(b"user_id_1", b"secret_1");
+    store("user_id_1", "secret_1");
 
+    let path = Path::new("_plaintext");
     let db = DB::open_default(&path).unwrap();
 
-    let mut iter = db.iterator(IteratorMode::From(b"user_id_1", Direction::Forward));
+    let mut iter =
+        db.iterator(IteratorMode::From(b"user_id_1", Direction::Forward));
     for (key, value) in iter {
         println!(
             "=> {:?}:{:?}",
