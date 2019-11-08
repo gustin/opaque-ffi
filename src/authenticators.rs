@@ -1,3 +1,4 @@
+use blake2::{Blake2b, Digest};
 use qrcodegen::QrCode;
 use qrcodegen::QrCodeEcc;
 use qrcodegen::QrSegment;
@@ -16,14 +17,20 @@ fn print_qr(qr: &QrCode) {
     println!();
 }
 
-fn main() {
+fn generate_totp(user_id: &str) {
     // https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
-    const MK_ULTRA: &'static str = "plaintext";
+    // generate secret and store it locally
+    // access when checking totp
+    // send secret to superagent, sync
+    let mut hasher = Blake2b::new();
+    hasher.input(b"some-rando-generated-string");
+    let key = hasher.result();
+    println!("{:?}", key);
 
     let mut totp = TOTPContext::builder()
         .period(5)
-        .secret(MK_ULTRA.as_bytes())
+        .secret(&key)
         .build();
 
     let uri = totp.to_uri(Some("Plaintext"), Some("Plaintext"));
@@ -35,3 +42,11 @@ fn main() {
 
     print_qr(&qr);
 }
+
+#[test]
+fn test_totp_generation() {
+    generate_totp("user_1337")
+}
+
+
+
