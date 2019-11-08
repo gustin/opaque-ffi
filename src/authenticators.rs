@@ -1,3 +1,4 @@
+use crate::storage;
 use blake2::{Blake2b, Digest};
 use qrcodegen::QrCode;
 use qrcodegen::QrCodeEcc;
@@ -28,10 +29,9 @@ fn generate_totp(user_id: &str) {
     let key = hasher.result();
     println!("{:?}", key);
 
-    let mut totp = TOTPContext::builder()
-        .period(5)
-        .secret(&key)
-        .build();
+    storage::store(user_id, &key);
+
+    let mut totp = TOTPContext::builder().period(5).secret(&key).build();
 
     let uri = totp.to_uri(Some("Plaintext"), Some("Plaintext"));
     println!("{}", uri);
@@ -45,8 +45,7 @@ fn generate_totp(user_id: &str) {
 
 #[test]
 fn test_totp_generation() {
-    generate_totp("user_1337")
+    let user_id = "1337";
+    generate_totp(user_id);
+    println!("Yeah {}", storage::retrieve(user_id));
 }
-
-
-

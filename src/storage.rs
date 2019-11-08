@@ -2,16 +2,27 @@ use rocksdb::*;
 use std::path::{Path, PathBuf};
 use std::str;
 
-fn store(key: &str, value: &str) {
+pub fn store(key: &str, value: &[u8]) {
     let path = Path::new("_plaintext");
     let db = DB::open_default(&path).unwrap();
 
-    db.put(key.as_bytes(), value.as_bytes());
+    db.put(key.as_bytes(), value);
+}
+
+pub fn retrieve(key: &str) -> String {
+    let path = Path::new("_plaintext");
+    let db = DB::open_default(&path).unwrap();
+
+    match db.get(key.as_bytes()) {
+        Ok(Some(value)) => value.to_utf8().unwrap().to_string(),
+        Ok(None) => "value not found".to_string(),
+        Err(e) => "operational problem encountered.".to_string(),
+    }
 }
 
 #[test]
 fn test_storing_data() {
-    store("user_id_1", "secret_1");
+    store("user_id_1", "secret_1".as_bytes());
 
     let path = Path::new("_plaintext");
     let db = DB::open_default(&path).unwrap();
