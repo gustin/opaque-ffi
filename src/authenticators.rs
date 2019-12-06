@@ -18,7 +18,7 @@ fn print_qr(qr: &QrCode) {
     println!();
 }
 
-fn generate_totp(user_id: &str) {
+pub fn generate_totp(user_id: &str) {
     // https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
     // generate secret and store it locally

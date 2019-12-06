@@ -9,9 +9,10 @@ crate-type = ["dylib"]
 
 [dependencies]
 blake2 = "0.8.1"
+curve25519-dalek = "1.2.3"
 ed25519-dalek = "1.0.0-pre.1"
 rand = "*"
-rocksdb = "0.12.4"
+rocksdb = "0.13.0"
 qrcodegen = "1.5.0"
 slauth = "0.4.4"
 

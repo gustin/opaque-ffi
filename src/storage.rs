@@ -14,7 +14,7 @@ pub fn retrieve(key: &str) -> String {
     let db = DB::open_default(&path).unwrap();
 
     match db.get(key.as_bytes()) {
-        Ok(Some(value)) => value.to_utf8().unwrap().to_string(),
+        Ok(Some(value)) => str::from_utf8(&value).unwrap().to_string(),
         Ok(None) => "value not found".to_string(),
         Err(e) => "operational problem encountered.".to_string(),
     }
