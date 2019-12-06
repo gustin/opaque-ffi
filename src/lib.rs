@@ -9,5 +9,3 @@ pub extern "C" fn generate_totp(user_id: &str) -> String {
 
     return "Holla".to_string();
 }
-
-
