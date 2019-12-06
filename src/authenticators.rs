@@ -18,7 +18,7 @@ fn print_qr(qr: &QrCode) {
     println!();
 }
 
-pub fn generate_totp(user_id: &str) {
+pub fn generate_totp(user_id: &str) -> String {
     // https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
     // generate secret and store it locally
@@ -37,15 +37,13 @@ pub fn generate_totp(user_id: &str) {
     println!("{}", uri);
 
     let qr = QrCode::encode_text(&uri, QrCodeEcc::Medium).unwrap();
-    let svg = qr.to_svg_string(4);
-    println!("{}", svg);
-
-    print_qr(&qr);
+    return qr.to_svg_string(4);
 }
 
 #[test]
 fn test_totp_generation() {
     let user_id = "1337";
-    generate_totp(user_id);
- //   println!("Yeah {}", storage::retrieve(user_id));
+    let qr = generate_totp(user_id);
+//    println!("Yeah {}", storage::retrieve(user_id));
+    println!("QR Code SVG: {}", qr);
 }
