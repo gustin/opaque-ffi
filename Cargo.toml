@@ -14,4 +14,7 @@ libc = "0.2"
 qrcodegen = "1.5.0"
 slauth = "0.4.4"
 
+[dependencies.opaque]
+features = ["nightly"]
+path = "../opaque"
 

@@ -1,4 +1,7 @@
 
+## Building
+
+Requires nightly rust for some OPAQUE dependencies (inline assembly, etc).
 
 
 ## Dependencies
@@ -8,3 +11,5 @@
 This should be able to be fully embedded.
 
     brew install rocksdb
+
+

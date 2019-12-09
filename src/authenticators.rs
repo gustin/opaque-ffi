@@ -29,7 +29,7 @@ pub fn generate_totp(user_id: &str) -> String {
     let key = hasher.result();
     println!("{:?}", key);
 
-//    storage::store(user_id, &key);
+    //    storage::store(user_id, &key);
 
     let mut totp = TOTPContext::builder().period(5).secret(&key).build();
 
@@ -44,6 +44,6 @@ pub fn generate_totp(user_id: &str) -> String {
 fn test_totp_generation() {
     let user_id = "1337";
     let qr = generate_totp(user_id);
-//    println!("Yeah {}", storage::retrieve(user_id));
+    //    println!("Yeah {}", storage::retrieve(user_id));
     println!("QR Code SVG: {}", qr);
 }
