@@ -41,10 +41,11 @@ pub struct Registration {
 }
 
 #[no_mangle]
-pub extern "C" fn registration_1(
+pub extern "C" fn registration(
     username: *const c_char,
     alpha: *const u8,
 ) -> Registration {
+    println!("Welcome to Rustyville");
     let username_c_str = unsafe {
         assert!(!username.is_null());
         CStr::from_ptr(username)
@@ -55,15 +56,34 @@ pub extern "C" fn registration_1(
     let mut alpha: [u8; 32] = [0; 32];
     alpha.copy_from_slice(&defrag[..32]);
 
+
+    println!("Username: {}", username);
+    println!("Beta: {:?}", alpha);
     let (beta, v, pub_s) = opaque::registration_init(username, &alpha);
     let beta = Box::new(beta);
     let v = Box::new(v);
     let pub_s = Box::new(pub_s);
 
-    return Registration {
+    Registration {
         beta: Box::into_raw(beta) as *mut u8,
         v: Box::into_raw(v) as *mut u8,
         pub_s: Box::into_raw(pub_s) as *mut u8,
+    }
+}
+
+impl From<(*const u8, *const u8, *const u8)> for Registration {
+    fn from(registration:(*const u8, *const u8, *const u8)) -> Registration {
+        Registration {
+            beta: registration.0,
+            v: registration.1,
+            pub_s: registration.2,
+        }
+    }
+}
+
+impl From<Registration> for (*const u8, *const u8, *const u8) {
+    fn from(registration: Registration) -> (*const u8, *const u8, *const u8) {
+        (registration.beta, registration.v, registration.pub_s)
     }
 }
 
