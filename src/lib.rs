@@ -52,17 +52,26 @@ pub extern "C" fn registration(
     };
     let username = username_c_str.to_str().unwrap();
 
-    let defrag: &[u8] = unsafe { slice::from_raw_parts(alpha, 32 as usize) };
+    let defrag: &[u8] = unsafe {
+        assert!(!alpha.is_null());
+        slice::from_raw_parts(alpha, 32 as usize)
+    };
     let mut alpha: [u8; 32] = [0; 32];
     alpha.copy_from_slice(&defrag[..32]);
 
 
     println!("Username: {}", username);
-    println!("Beta: {:?}", alpha);
+    println!("Alpha;: {:?}", alpha);
     let (beta, v, pub_s) = opaque::registration_init(username, &alpha);
     let beta = Box::new(beta);
     let v = Box::new(v);
     let pub_s = Box::new(pub_s);
+
+    println!("Beta;: {:?}", beta);
+    println!("V:: {:?}", v);
+    println!("PubS:: {:?}", pub_s);
+
+    println!("Later, Rustafarian");
 
     Registration {
         beta: Box::into_raw(beta) as *mut u8,
