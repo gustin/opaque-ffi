@@ -40,12 +40,21 @@ pub struct Registration {
     pub_s: *const u8,
 }
 
+#[repr(C)]
+pub struct Authentication {
+    beta: *const u8,
+    v: *const u8,
+    //pub_s: *const u8, NOTE: needed?
+    ke_2: *const u8,
+    y: *const u8,
+}
+
 #[no_mangle]
-pub extern "C" fn authentication_start(
+pub extern "C" fn authenticate_start(
     username: *const c_char,
     alpha: *const u8,
     key: *const u8,
-) {
+) -> Authentication {
     let username_c_str = unsafe {
         assert!(!username.is_null());
         CStr::from_ptr(username)
@@ -70,7 +79,21 @@ pub extern "C" fn authentication_start(
     println!("Alpha: {:?}", alpha);
     println!("KE1: {:?}", key);
 
-    opaque::authenticate_start(username, &alpha, &key);
+    let (beta, v, envelope, ke_2, y) =
+        opaque::authenticate_start(username, &alpha, &key);
+
+    let beta = Box::new(beta);
+    let v = Box::new(v);
+    let envelope = Box::new(envelope);
+    let ke_2 = Box::new(ke_2);
+    let y = Box::new(y);
+
+    Authentication {
+        beta: Box::into_raw(beta) as *mut u8,
+        v: Box::into_raw(v) as *mut u8,
+        ke_2: Box::into_raw(ke_2) as *mut u8,
+        y: Box::into_raw(y) as *mut u8,
+    }
 }
 
 #[no_mangle]
