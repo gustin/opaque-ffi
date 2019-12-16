@@ -41,7 +41,7 @@ pub struct Registration {
 }
 
 #[no_mangle]
-pub extern "C" fn registration(
+pub extern "C" fn registration_start(
     username: *const c_char,
     alpha: *const u8,
 ) -> Registration {
@@ -81,7 +81,7 @@ pub extern "C" fn registration(
 }
 
 #[no_mangle]
-pub extern "C" fn registration_finalization(
+pub extern "C" fn registration_finalize(
     username: *const c_char,
     pub_u: *const u8,
     envelope: *const u8
