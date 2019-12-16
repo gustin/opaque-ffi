@@ -1,4 +1,4 @@
-pub fn registration_init(
+pub fn registration_start(
     username: &str,
     alpha: &[u8; 32],
 ) -> ([u8; 32], [u8; 32], [u8; 32]) {
@@ -7,5 +7,13 @@ pub fn registration_init(
     // then package and post to a url
 
     // => Registration 1
-    return opaque::registration_1(username, &alpha);
+    opaque::registration_start(username, &alpha)
+}
+
+pub fn registration_finalize(
+    username: &str,
+    pub_c: &[u8; 32],
+    envelope: &Vec<u8>
+) {
+    opaque::registration_finalize(username, &pub_c, &envelope)
 }

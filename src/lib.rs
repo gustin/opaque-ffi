@@ -61,7 +61,7 @@ pub extern "C" fn registration_start(
 
     println!("Username: {}", username);
     println!("Alpha;: {:?}", alpha);
-    let (beta, v, pub_s) = opaque::registration_init(username, &alpha);
+    let (beta, v, pub_s) = opaque::registration_start(username, &alpha);
     let beta = Box::new(beta);
     let v = Box::new(v);
     let pub_s = Box::new(pub_s);
@@ -111,8 +111,7 @@ pub extern "C" fn registration_finalize(
     println!("Pub U: {:?}", pub_u);
     println!("Envelope: {:?}", envelope);
 
-
-
+    opaque::registration_finalize(&username, &pub_u, &envelope);
 }
 
 
