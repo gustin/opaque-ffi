@@ -80,6 +80,43 @@ pub extern "C" fn registration(
     }
 }
 
+#[no_mangle]
+pub extern "C" fn registration_finalization(
+    username: *const c_char,
+    pub_u: *const u8,
+    envelope: *const u8
+) {
+    println!("Welcome to Rustyville");
+    let username_c_str = unsafe {
+        assert!(!username.is_null());
+        CStr::from_ptr(username)
+    };
+    let username = username_c_str.to_str().unwrap();
+
+    let defrag: &[u8] = unsafe {
+        assert!(!pub_u.is_null());
+        slice::from_raw_parts(pub_u, 32 as usize)
+    };
+    let mut pub_u: [u8; 32] = [0; 32];
+
+    pub_u.copy_from_slice(&defrag[..32]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!envelope.is_null());
+        slice::from_raw_parts(envelope, 112 as usize) // size of encrypted 112
+    };
+    let mut envelope: Vec<u8> = Vec::new();
+    envelope.clone_from_slice(&defrag[..112]);
+
+    println!("Username: {}", username);
+    println!("Pub U: {:?}", pub_u);
+    println!("Envelope: {:?}", envelope);
+
+
+
+}
+
+
 impl From<(*const u8, *const u8, *const u8)> for Registration {
     fn from(registration:(*const u8, *const u8, *const u8)) -> Registration {
         Registration {
