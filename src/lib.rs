@@ -41,6 +41,39 @@ pub struct Registration {
 }
 
 #[no_mangle]
+pub extern "C" fn authentication_start(
+    username: *const c_char,
+    alpha: *const u8,
+    key: *const u8,
+) {
+    let username_c_str = unsafe {
+        assert!(!username.is_null());
+        CStr::from_ptr(username)
+    };
+    let username = username_c_str.to_str().unwrap();
+
+    let defrag: &[u8] = unsafe {
+        assert!(!alpha.is_null());
+        slice::from_raw_parts(alpha, 32 as usize)
+    };
+    let mut alpha: [u8; 32] = [0; 32];
+    alpha.copy_from_slice(&defrag[..32]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!key.is_null());
+        slice::from_raw_parts(key, 32 as usize)
+    };
+    let mut key: [u8; 32] = [0; 32];
+    key.copy_from_slice(&defrag[..32]);
+
+    println!("Username: {}", username);
+    println!("Alpha: {:?}", alpha);
+    println!("KE1: {:?}", key);
+
+    opaque::authenticate_start(username, &alpha, &key);
+}
+
+#[no_mangle]
 pub extern "C" fn registration_start(
     username: *const c_char,
     alpha: *const u8,
@@ -83,7 +116,7 @@ pub extern "C" fn registration_start(
 pub extern "C" fn registration_finalize(
     username: *const c_char,
     pub_u: *const u8,
-    envelope: *const u8
+    envelope: *const u8,
 ) {
     println!("Welcome to Rustyville");
     let username_c_str = unsafe {
@@ -114,9 +147,8 @@ pub extern "C" fn registration_finalize(
     opaque::registration_finalize(&username, &pub_u, &envelope);
 }
 
-
 impl From<(*const u8, *const u8, *const u8)> for Registration {
-    fn from(registration:(*const u8, *const u8, *const u8)) -> Registration {
+    fn from(registration: (*const u8, *const u8, *const u8)) -> Registration {
         Registration {
             beta: registration.0,
             v: registration.1,
@@ -130,4 +162,3 @@ impl From<Registration> for (*const u8, *const u8, *const u8) {
         (registration.beta, registration.v, registration.pub_s)
     }
 }
-
