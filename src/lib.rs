@@ -45,6 +45,7 @@ pub struct Authentication {
     beta: *const u8,
     v: *const u8,
     //pub_s: *const u8, NOTE: needed?
+    envelope: *const u8,
     ke_2: *const u8,
     y: *const u8,
 }
@@ -82,6 +83,8 @@ pub extern "C" fn authenticate_start(
     let (beta, v, envelope, ke_2, y) =
         opaque::authenticate_start(username, &alpha, &key);
 
+    println!("PreBoxed Envelope: {:?}", envelope);
+
     let beta = Box::new(beta);
     let v = Box::new(v);
     let envelope = Box::new(envelope);
@@ -91,6 +94,7 @@ pub extern "C" fn authenticate_start(
     Authentication {
         beta: Box::into_raw(beta) as *mut u8,
         v: Box::into_raw(v) as *mut u8,
+        envelope: Box::into_raw(envelope) as *mut u8,
         ke_2: Box::into_raw(ke_2) as *mut u8,
         y: Box::into_raw(y) as *mut u8,
     }
