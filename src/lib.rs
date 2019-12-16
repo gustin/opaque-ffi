@@ -99,6 +99,44 @@ pub extern "C" fn authenticate_start(
     }
 }
 
+
+
+#[no_mangle]
+pub extern "C" fn authenticate_finalize(
+    username: *const c_char,
+    key: *const u8,
+    x: *const u8,
+) {
+    println!(":- Agent -> Authenticate Finalize:");
+    let username_c_str = unsafe {
+        assert!(!username.is_null());
+        CStr::from_ptr(username)
+    };
+    let username = username_c_str.to_str().unwrap();
+
+    let defrag: &[u8] = unsafe {
+        assert!(!key.is_null());
+        slice::from_raw_parts(key, 192 as usize)
+    };
+    let mut key: Vec<u8> = vec![0; 192];
+    key.copy_from_slice(&defrag[..192]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!x.is_null());
+        slice::from_raw_parts(x, 32 as usize) // size of encrypted 112
+    };
+    let mut x: [u8; 32] = [0; 32];
+    x.copy_from_slice(&defrag[..32]);
+
+    println!("Username: {}", username);
+    println!("Key: {:?}", key);
+    println!("X: {:?}", x);
+
+    opaque::authenticate_finalize(&username, &key, &x);
+}
+
+
+
 #[no_mangle]
 pub extern "C" fn registration_start(
     username: *const c_char,

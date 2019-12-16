@@ -25,3 +25,11 @@ pub fn authenticate_start(
 ) -> ([u8; 32], [u8; 32], Vec<u8>, Vec<u8>, [u8; 32]) {
     opaque::authenticate_start(username, &alpha, &key)
 }
+
+pub fn authenticate_finalize(
+    username: &str,
+    key: &Vec<u8>,
+    x: &[u8; 32],
+) {
+    opaque::authenticate_finalize(username, &key, &x);
+}
