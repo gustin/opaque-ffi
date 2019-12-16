@@ -87,14 +87,13 @@ pub extern "C" fn authenticate_start(
 
     let beta = Box::new(beta);
     let v = Box::new(v);
-    let envelope = Box::new(envelope);
     let ke_2 = Box::new(ke_2);
     let y = Box::new(y);
 
     Authentication {
         beta: Box::into_raw(beta) as *mut u8,
         v: Box::into_raw(v) as *mut u8,
-        envelope: Box::into_raw(envelope) as *mut u8,
+        envelope: envelope.as_ptr(),     // LEAK: boxing seemed to fail
         ke_2: Box::into_raw(ke_2) as *mut u8,
         y: Box::into_raw(y) as *mut u8,
     }
