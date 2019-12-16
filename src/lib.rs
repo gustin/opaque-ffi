@@ -59,7 +59,6 @@ pub extern "C" fn registration_start(
     let mut alpha: [u8; 32] = [0; 32];
     alpha.copy_from_slice(&defrag[..32]);
 
-
     println!("Username: {}", username);
     println!("Alpha;: {:?}", alpha);
     let (beta, v, pub_s) = opaque::registration_init(username, &alpha);
@@ -105,8 +104,8 @@ pub extern "C" fn registration_finalize(
         assert!(!envelope.is_null());
         slice::from_raw_parts(envelope, 112 as usize) // size of encrypted 112
     };
-    let mut envelope: Vec<u8> = Vec::new();
-    envelope.clone_from_slice(&defrag[..112]);
+    let mut envelope: Vec<u8> = vec![0; 112];
+    envelope.copy_from_slice(&defrag[..112]);
 
     println!("Username: {}", username);
     println!("Pub U: {:?}", pub_u);
