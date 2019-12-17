@@ -83,18 +83,20 @@ pub extern "C" fn authenticate_start(
     let (beta, v, envelope, ke_2, y) =
         opaque::authenticate_start(username, &alpha, &key);
 
+    println!("PreBoxed KE2: {:?}", ke_2);
+    println!("KE2 Size: {:?}", ke_2.capacity());
     println!("PreBoxed Envelope: {:?}", envelope);
+    println!("Envelope Size : {:?}", envelope.capacity());
 
     let beta = Box::new(beta);
     let v = Box::new(v);
-    let ke_2 = Box::new(ke_2);
     let y = Box::new(y);
 
     Authentication {
         beta: Box::into_raw(beta) as *mut u8,
         v: Box::into_raw(v) as *mut u8,
-        envelope: envelope.as_ptr(),     // LEAK: boxing seemed to fail
-        ke_2: Box::into_raw(ke_2) as *mut u8,
+        envelope: envelope.as_ptr() as *mut u8,     // LEAK: boxing seemed to fail
+        ke_2: ke_2.as_ptr() as *mut u8,
         y: Box::into_raw(y) as *mut u8,
     }
 }
