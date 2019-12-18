@@ -25,7 +25,7 @@ pub fn generate_totp(user_id: &str) -> String {
     // access when checking totp
     // send secret to superagent, sync
     let mut hasher = Blake2b::new();
-    hasher.input(b"some-rando-generated-string");
+    hasher.input(user_id);
     let key = hasher.result();
     println!("{:?}", key);
 
@@ -37,7 +37,9 @@ pub fn generate_totp(user_id: &str) -> String {
     println!("{}", uri);
 
     let qr = QrCode::encode_text(&uri, QrCodeEcc::Medium).unwrap();
-    qr.to_svg_string(4)
+    let svg = qr.to_svg_string(4);
+    let (first, last) = svg.split_at(138);
+    String::from(last)
 }
 
 #[test]
