@@ -1,3 +1,5 @@
+use crate::token;
+
 pub fn registration_start(
     username: &str,
     alpha: &[u8; 32],
@@ -30,6 +32,7 @@ pub fn authenticate_finalize(
     username: &str,
     key: &Vec<u8>,
     x: &[u8; 32],
-) {
+) -> String {
     opaque::authenticate_finalize(username, &key, &x);
+    token::generate()
 }

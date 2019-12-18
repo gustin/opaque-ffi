@@ -37,7 +37,7 @@ pub fn generate_totp(user_id: &str) -> String {
     println!("{}", uri);
 
     let qr = QrCode::encode_text(&uri, QrCodeEcc::Medium).unwrap();
-    return qr.to_svg_string(4);
+    qr.to_svg_string(4)
 }
 
 #[test]

@@ -1,6 +1,7 @@
 mod authenticators;
 mod opaque;
 //mod storage;
+mod token;
 use libc::c_char;
 use std::convert::From;
 use std::ffi::{CStr, CString};
@@ -108,7 +109,7 @@ pub extern "C" fn authenticate_finalize(
     username: *const c_char,
     key: *const u8,
     x: *const u8,
-) {
+) -> *mut c_char {
     println!(":- Agent -> Authenticate Finalize:");
     let username_c_str = unsafe {
         assert!(!username.is_null());
@@ -131,10 +132,12 @@ pub extern "C" fn authenticate_finalize(
     x.copy_from_slice(&defrag[..32]);
 
     println!("Username: {}", username);
-    println!("Key: {:?}", key);
+    println!("Key 3: {:?}", key);
     println!("X: {:?}", x);
 
-    opaque::authenticate_finalize(&username, &key, &x);
+    let token = opaque::authenticate_finalize(&username, &key, &x);
+    println!("Token: {:?}", token);
+    CString::new(token).unwrap().into_raw()
 }
 
 
@@ -212,6 +215,17 @@ pub extern "C" fn registration_finalize(
 
     opaque::registration_finalize(&username, &pub_u, &envelope);
 }
+
+#[no_mangle]
+pub extern "C" fn free_token(token: *mut c_char) {
+    unsafe {
+        if token.is_null() {
+            return;
+        }
+        CString::from_raw(token)
+    };
+}
+
 
 impl From<(*const u8, *const u8, *const u8)> for Registration {
     fn from(registration: (*const u8, *const u8, *const u8)) -> Registration {

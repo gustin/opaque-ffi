@@ -9,8 +9,10 @@ crate-type = ["cdylib"]
 
 [dependencies]
 blake2 = "0.8.1"
+chrono = "0.4.10"
 # ffi-support : https://crates.io/crates/ffi-support
 libc = "0.2"
+paseto = "^1.0.6"
 #rocksdb = "0.13.0"
 qrcodegen = "1.5.0"
 slauth = "0.4.4"
