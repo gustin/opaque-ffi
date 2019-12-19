@@ -1,12 +1,20 @@
 use chrono::prelude::*;
-
+use ring::{ rand, signature::{self, KeyPair} };
 
 pub fn generate() -> String {
+    let rng = rand::SystemRandom::new();
+    let pkcs8_bytes = signature::Ed25519KeyPair::generate_pkcs8(&rng).unwrap();
+    let keypair =
+        signature::Ed25519KeyPair::from_pkcs8(pkcs8_bytes.as_ref()).unwrap();
     let current_date_time = Utc::now();
-    let dt = Utc.ymd(current_date_time.year() + 1, 7, 8).and_hms(9, 10, 11);
+
+    let dt = Utc
+        .ymd(current_date_time.year() + 1, 7, 8)
+        .and_hms(9, 10, 11);
 
     paseto::tokens::PasetoBuilder::new()
-        .set_encryption_key(Vec::from("YELLOW SUBMARINE, BLACK WIZARDRY".as_bytes()))
+        .set_ed25519_key(keypair)
+        //        .set_encryption_key(Vec::from("YELLOW SUBMARINE, BLACK WIZARDRY".as_bytes()))
         .set_issued_at(None)
         .set_expiration(dt)
         .set_issuer(String::from("instructure"))

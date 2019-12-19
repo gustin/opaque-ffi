@@ -96,13 +96,11 @@ pub extern "C" fn authenticate_start(
     Authentication {
         beta: Box::into_raw(beta) as *mut u8,
         v: Box::into_raw(v) as *mut u8,
-        envelope: envelope.as_ptr() as *mut u8,     // LEAK: boxing seemed to fail
+        envelope: envelope.as_ptr() as *mut u8, // LEAK: boxing seemed to fail
         ke_2: ke_2.as_ptr() as *mut u8,
         y: Box::into_raw(y) as *mut u8,
     }
 }
-
-
 
 #[no_mangle]
 pub extern "C" fn authenticate_finalize(
@@ -139,8 +137,6 @@ pub extern "C" fn authenticate_finalize(
     println!("Token: {:?}", token);
     CString::new(token).unwrap().into_raw()
 }
-
-
 
 #[no_mangle]
 pub extern "C" fn registration_start(
@@ -225,7 +221,6 @@ pub extern "C" fn free_token(token: *mut c_char) {
         CString::from_raw(token)
     };
 }
-
 
 impl From<(*const u8, *const u8, *const u8)> for Registration {
     fn from(registration: (*const u8, *const u8, *const u8)) -> Registration {
