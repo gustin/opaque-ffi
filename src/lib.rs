@@ -143,7 +143,6 @@ pub extern "C" fn registration_start(
     username: *const c_char,
     alpha: *const u8,
 ) -> Registration {
-    println!("Welcome to Rustyville");
     let username_c_str = unsafe {
         assert!(!username.is_null());
         CStr::from_ptr(username)
@@ -168,8 +167,6 @@ pub extern "C" fn registration_start(
     println!("V:: {:?}", v);
     println!("PubS:: {:?}", pub_s);
 
-    println!("Later, Rustafarian");
-
     Registration {
         beta: Box::into_raw(beta) as *mut u8,
         v: Box::into_raw(v) as *mut u8,
@@ -183,7 +180,6 @@ pub extern "C" fn registration_finalize(
     pub_u: *const u8,
     envelope: *const u8,
 ) {
-    println!("Welcome to Rustyville");
     let username_c_str = unsafe {
         assert!(!username.is_null());
         CStr::from_ptr(username)
