@@ -12,4 +12,8 @@ This should be able to be fully embedded.
 
     brew install rocksdb
 
+## Copyright
+
+    go get -u github.com/fbiville/headache/cmd/headache
+    headache
 
