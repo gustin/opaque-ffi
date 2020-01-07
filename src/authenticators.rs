@@ -8,11 +8,23 @@
 
 //use crate::storage;
 use blake2::{Blake2b, Digest};
+use lazy_static::lazy_static;
 use qrcodegen::QrCode;
 use qrcodegen::QrCodeEcc;
 use qrcodegen::QrSegment;
 use slauth::oath::totp::*;
 use slauth::oath::OtpAuth;
+use std::collections::HashMap;
+use std::sync::Mutex;
+
+struct Authenticator {
+}
+
+lazy_static! {
+    static ref AUTHENTICATOR_MAP: Mutex<HashMap<String, Vec<u8>>> =
+        { Mutex::new(HashMap::new()) };
+}
+
 
 fn print_qr(qr: &QrCode) {
     let border: i32 = 4;
@@ -36,8 +48,14 @@ pub fn generate_totp(user_id: &str) -> String {
     hasher.input(user_id);
     let key = hasher.result();
     println!("{:?}", key);
+    println!("{:?}", key.iter().as_slice());
 
     //    storage::store(user_id, &key);
+    AUTHENTICATOR_MAP
+        .lock()
+        .unwrap()
+        .insert(user_id.to_string(), key);
+
 
     let mut totp = TOTPContext::builder().period(5).secret(&key).build();
 
@@ -57,3 +75,5 @@ fn test_totp_generation() {
     //    println!("Yeah {}", storage::retrieve(user_id));
     println!("QR Code SVG: {}", qr);
 }
+
+
