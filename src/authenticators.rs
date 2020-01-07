@@ -69,6 +69,12 @@ pub fn generate_qr_code(user_id: &str) -> String {
 }
 
 
+pub fn confirm_current(user_id: &str, code: &str) -> bool {
+    let secret_key = AUTHENTICATOR_MAP.lock().unwrap().get(user_id).unwrap().clone();
+    let totp = TOTPContext::builder().period(5).secret(&secret_key).build();
+    totp.validate_current(code)
+}
+
 #[test]
 fn test_qr_generation() {
     let user_id = "1337";
@@ -85,4 +91,11 @@ fn test_confirmation_of_totp() {
     let secret_key = AUTHENTICATOR_MAP.lock().unwrap().get(user_id).unwrap().clone();
     println!("Show me all your secrets:");
     println!("{:?}", secret_key);
+
+    let totp = TOTPContext::builder().period(5).secret(&secret_key).build();
+    let code = totp.gen();
+
+    let valid = confirm_current(user_id, &code);
+    println!("#{:?}", code);
+    assert_eq!(valid, true);
 }
