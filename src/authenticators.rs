@@ -17,6 +17,11 @@ use slauth::oath::OtpAuth;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
+/*
+ * An authenticator is derived from a main private key.
+ * Supporting methods for various authenticators, e.g possession,
+ * knowledge.
+ */
 struct Authenticator {
 }
 
@@ -26,18 +31,10 @@ lazy_static! {
 }
 
 
-fn print_qr(qr: &QrCode) {
-    let border: i32 = 4;
-    for y in -border..qr.size() + border {
-        for x in -border..qr.size() + border {
-            let c: char = if qr.get_module(x, y) { '█' } else { ' ' };
-            print!("{0}{0}", c);
-        }
-        println!();
-    }
-    println!();
-}
 
+/*
+ * Generate a fresh qr code that a user can register an authenticator with.
+ */
 pub fn generate_qr_code(user_id: &str) -> String {
     // https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
@@ -69,10 +66,28 @@ pub fn generate_qr_code(user_id: &str) -> String {
 }
 
 
+/*
+ * Confirm the current TOTP against the provided user id.
+ */
 pub fn confirm_current(user_id: &str, code: &str) -> bool {
     let secret_key = AUTHENTICATOR_MAP.lock().unwrap().get(user_id).unwrap().clone();
     let totp = TOTPContext::builder().period(5).secret(&secret_key).build();
     totp.validate_current(code)
+}
+
+/*
+ * Utility method to print out a QR code in block form.
+ */
+fn print_qr(qr: &QrCode) {
+    let border: i32 = 4;
+    for y in -border..qr.size() + border {
+        for x in -border..qr.size() + border {
+            let c: char = if qr.get_module(x, y) { '█' } else { ' ' };
+            print!("{0}{0}", c);
+        }
+        println!();
+    }
+    println!();
 }
 
 #[test]
