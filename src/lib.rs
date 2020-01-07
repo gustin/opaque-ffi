@@ -14,17 +14,21 @@ use libc::c_char;
 use std::convert::From;
 use std::ffi::{CStr, CString};
 use std::slice;
-use std::str;
+
+// Authenticators
+
+
+// TOTP / Authy
 
 #[no_mangle]
-pub extern "C" fn generate_totp_qr(user_id: *const c_char) -> *mut c_char {
+pub extern "C" fn generate_qr_code(user_id: *const c_char) -> *mut c_char {
     let c_str = unsafe {
         assert!(!user_id.is_null());
         CStr::from_ptr(user_id)
     };
 
     let user_id = c_str.to_str().unwrap();
-    let qr_code_svg = authenticators::generate_totp(user_id);
+    let qr_code_svg = authenticators::generate_qr_code(user_id);
 
     let c_str_back_at_ya = CString::new(qr_code_svg).unwrap();
     c_str_back_at_ya.into_raw()
@@ -38,6 +42,24 @@ pub extern "C" fn free_totp_qr(qr: *mut c_char) {
         }
         CString::from_raw(qr)
     };
+}
+
+#[no_mangle]
+pub extern "C" fn confirm_current(user_id: *const c_char, code: *const c_char) -> bool {
+    let c_user_id = unsafe {
+        assert!(!user_id.is_null());
+        CStr::from_ptr(user_id)
+    };
+    let c_code = unsafe {
+        assert!(!user_id.is_null());
+        CStr::from_ptr(user_id)
+    };
+
+
+    let user_id = c_user_id.to_str().unwrap();
+    let code = c_code.to_str().unwrap();
+
+    authenticators::confirm_current(user_id, code)
 }
 
 // OPAQUE interface

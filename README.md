@@ -12,6 +12,12 @@ This should be able to be fully embedded.
 
     brew install rocksdb
 
+## Clippy
+
+Will attempt to cleanup certain issues:
+
+    cargo fix -Z unstable-options --clippy
+
 ## Copyright
 
     go get -u github.com/fbiville/headache/cmd/headache

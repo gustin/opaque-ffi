@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 blake2 = "0.8.1"
 chrono = "0.4.10"
 # ffi-support : https://crates.io/crates/ffi-support
+lazy_static = "1.4.0"
 libc = "0.2"
 paseto = "^1.0.6"
 ring = "0.16.9"
