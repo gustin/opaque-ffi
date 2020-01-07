@@ -54,7 +54,7 @@ pub fn generate_totp(user_id: &str) -> String {
     AUTHENTICATOR_MAP
         .lock()
         .unwrap()
-        .insert(user_id.to_string(), key);
+        .insert(user_id.to_string(), key.to_vec());
 
 
     let mut totp = TOTPContext::builder().period(5).secret(&key).build();
