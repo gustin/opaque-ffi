@@ -11,7 +11,7 @@ use blake2::{Blake2b, Digest};
 use lazy_static::lazy_static;
 use qrcodegen::QrCode;
 use qrcodegen::QrCodeEcc;
-use qrcodegen::QrSegment;
+
 use slauth::oath::totp::*;
 use slauth::oath::OtpAuth;
 use std::collections::HashMap;
@@ -57,14 +57,14 @@ pub fn generate_totp(user_id: &str) -> String {
         .insert(user_id.to_string(), key.to_vec());
 
 
-    let mut totp = TOTPContext::builder().period(5).secret(&key).build();
+    let totp = TOTPContext::builder().period(5).secret(&key).build();
 
     let uri = totp.to_uri(Some("Plaintext"), Some("Plaintext"));
     println!("{}", uri);
 
     let qr = QrCode::encode_text(&uri, QrCodeEcc::Medium).unwrap();
     let svg = qr.to_svg_string(4);
-    let (first, last) = svg.split_at(138);
+    let (_first, last) = svg.split_at(138);
     String::from(last)
 }
 

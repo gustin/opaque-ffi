@@ -14,7 +14,7 @@ use libc::c_char;
 use std::convert::From;
 use std::ffi::{CStr, CString};
 use std::slice;
-use std::str;
+
 
 #[no_mangle]
 pub extern "C" fn generate_totp_qr(user_id: *const c_char) -> *mut c_char {
