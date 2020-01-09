@@ -22,15 +22,12 @@ use std::sync::Mutex;
  * Supporting methods for various authenticators, e.g possession,
  * knowledge.
  */
-struct Authenticator {
-}
+struct Authenticator {}
 
 lazy_static! {
     static ref AUTHENTICATOR_MAP: Mutex<HashMap<String, Vec<u8>>> =
         { Mutex::new(HashMap::new()) };
 }
-
-
 
 /*
  * Generate a fresh qr code that a user can register an authenticator with.
@@ -65,12 +62,16 @@ pub fn generate_qr_code(user_id: &str) -> String {
     String::from(last)
 }
 
-
 /*
  * Confirm the current TOTP against the provided user id.
  */
 pub fn confirm_current(user_id: &str, code: &str) -> bool {
-    let secret_key = AUTHENTICATOR_MAP.lock().unwrap().get(user_id).unwrap().clone();
+    let secret_key = AUTHENTICATOR_MAP
+        .lock()
+        .unwrap()
+        .get(user_id)
+        .unwrap()
+        .clone();
     let totp = TOTPContext::builder().period(5).secret(&secret_key).build();
     totp.validate_current(code)
 }
@@ -103,7 +104,12 @@ fn test_confirmation_of_totp() {
     let user_id = "1337";
     generate_qr_code(user_id);
 
-    let secret_key = AUTHENTICATOR_MAP.lock().unwrap().get(user_id).unwrap().clone();
+    let secret_key = AUTHENTICATOR_MAP
+        .lock()
+        .unwrap()
+        .get(user_id)
+        .unwrap()
+        .clone();
     println!("Show me all your secrets:");
     println!("{:?}", secret_key);
 

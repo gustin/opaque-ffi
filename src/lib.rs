@@ -17,7 +17,6 @@ use std::slice;
 
 // Authenticators
 
-
 // TOTP / Authy
 
 #[no_mangle]
@@ -45,7 +44,10 @@ pub extern "C" fn free_qr_code(qr: *mut c_char) {
 }
 
 #[no_mangle]
-pub extern "C" fn confirm_current(user_id: *const c_char, code: *const c_char) -> bool {
+pub extern "C" fn confirm_current(
+    user_id: *const c_char,
+    code: *const c_char,
+) -> bool {
     let c_user_id = unsafe {
         assert!(!user_id.is_null());
         CStr::from_ptr(user_id)
@@ -54,7 +56,6 @@ pub extern "C" fn confirm_current(user_id: *const c_char, code: *const c_char) -
         assert!(!user_id.is_null());
         CStr::from_ptr(user_id)
     };
-
 
     let user_id = c_user_id.to_str().unwrap();
     let code = c_code.to_str().unwrap();

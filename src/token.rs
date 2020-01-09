@@ -7,7 +7,10 @@
  */
 
 use chrono::prelude::*;
-use ring::{ rand, signature::{self} };
+use ring::{
+    rand,
+    signature::{self},
+};
 
 pub fn generate() -> String {
     let rng = rand::SystemRandom::new();
