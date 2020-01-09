@@ -44,7 +44,7 @@ pub extern "C" fn free_qr_code(qr: *mut c_char) {
 }
 
 #[no_mangle]
-pub extern "C" fn confirm_current(
+pub extern "C" fn confirm_second_factor(
     user_id: *const c_char,
     code: *const c_char,
 ) -> bool {

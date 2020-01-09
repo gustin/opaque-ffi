@@ -8,9 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-
-## [0.1.1] - 2019-01-09
-
 ### Added
 
 - Authenticator: Ability to generate a TOTP QR code.
@@ -36,6 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Security in case of vulnerabilities.
 
 
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.1...HEAD
-[1.1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v0.1.1
+#[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.1...HEAD
+#[1.1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v0.1.1
 
