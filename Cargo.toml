@@ -1,6 +1,6 @@
 [package]
-name = "plaintext-agent"
-version = "0.1.0"
+name = "plaintext-sdk-core"
+version = "0.1.1"
 authors = ["gustii <gustin@users.noreply.github.com>"]
 edition = "2018"
 

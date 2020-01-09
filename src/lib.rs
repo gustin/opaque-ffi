@@ -35,7 +35,7 @@ pub extern "C" fn generate_qr_code(user_id: *const c_char) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern "C" fn free_totp_qr(qr: *mut c_char) {
+pub extern "C" fn free_qr_code(qr: *mut c_char) {
     unsafe {
         if qr.is_null() {
             return;
