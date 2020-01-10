@@ -1,5 +1,5 @@
 [package]
-name = "plaintext-sdk-core"
+name = "plaintext-core-sdk"
 version = "0.1.1"
 authors = ["gustii <gustin@users.noreply.github.com>"]
 edition = "2018"
