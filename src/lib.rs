@@ -53,8 +53,8 @@ pub extern "C" fn confirm_second_factor(
         CStr::from_ptr(user_id)
     };
     let c_code = unsafe {
-        assert!(!user_id.is_null());
-        CStr::from_ptr(user_id)
+        assert!(!code.is_null());
+        CStr::from_ptr(code)
     };
 
     let user_id = c_user_id.to_str().unwrap();
