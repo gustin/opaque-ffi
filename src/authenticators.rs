@@ -68,7 +68,10 @@ pub fn confirm_current(user_id: &str, code: &str) -> bool {
         .get(user_id)
         .unwrap()
         .clone();
-    let totp = TOTPContext::builder().period(30).secret(&secret_key).build();
+    let totp = TOTPContext::builder()
+        .period(30)
+        .secret(&secret_key)
+        .build();
     totp.validate_current(&code)
 }
 
@@ -86,7 +89,6 @@ fn print_qr(qr: &QrCode) {
     }
     println!();
 }
-
 
 #[test]
 fn test_qr_generation() {

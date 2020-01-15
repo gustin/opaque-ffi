@@ -18,6 +18,8 @@ ring = "0.16.9"
 #rocksdb = "0.13.0"
 qrcodegen = "1.5.0"
 slauth = "0.4.9"
+webauthn-rs = "0.1.4"
+
 
 [dependencies.opaque]
 features = ["nightly"]

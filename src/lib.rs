@@ -10,6 +10,7 @@ mod authenticators;
 mod opaque;
 //mod storage;
 mod token;
+mod webauthn;
 use libc::c_char;
 use std::convert::From;
 use std::ffi::{CStr, CString};
