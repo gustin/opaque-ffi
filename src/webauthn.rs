@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Result;
-use webauthn_rs::*;
 use webauthn_rs::ephemeral::WebauthnEphemeralConfig;
+use webauthn_rs::*;
 
 /*
  * WebAuthN Glossary
@@ -48,7 +48,7 @@ use webauthn_rs::ephemeral::WebauthnEphemeralConfig;
  * values.
 */
 
-fn registration_challenge(username: &str) -> String {
+pub fn registration_challenge(username: &str) -> String {
     let config = WebauthnEphemeralConfig::new(
         "relaying_party_name",
         "relaying_party_origin",
@@ -61,9 +61,6 @@ fn registration_challenge(username: &str) -> String {
     json.unwrap()
 }
 
-
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -71,7 +68,7 @@ mod tests {
     #[test]
     fn challenge() {
         println!("WebauthN");
-        let challenge = registration_challenge("jerryg");
+        let challenge = registration_challenge("jerryG");
         println!("{:?}", challenge);
     }
 }

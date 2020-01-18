@@ -265,3 +265,35 @@ impl From<Registration> for (*const u8, *const u8, *const u8) {
         (registration.beta, registration.v, registration.pub_s)
     }
 }
+
+/*
+ * WebAuthN
+ */
+
+#[no_mangle]
+pub extern "C" fn webauthn_registration_challenge(
+    username: *mut c_char,
+) -> *mut c_char {
+    let c_username = unsafe {
+        assert!(!username.is_null());
+        CStr::from_ptr(username)
+    };
+
+    let username = c_username.to_str().unwrap();
+    let challenge = webauthn::registration_challenge(username);
+
+    let c_challenge = CString::new(challenge).unwrap();
+    c_challenge.into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn webauthn_free_challenge(challenge: *mut c_char) {
+    unsafe {
+        if challenge.is_null() {
+            return;
+        }
+        CString::from_raw(challenge)
+    };
+}
+
+
