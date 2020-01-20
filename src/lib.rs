@@ -295,5 +295,3 @@ pub extern "C" fn webauthn_free_challenge(challenge: *mut c_char) {
         CString::from_raw(challenge)
     };
 }
-
-

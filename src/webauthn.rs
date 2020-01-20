@@ -61,6 +61,19 @@ pub fn registration_challenge(username: &str) -> String {
     json.unwrap()
 }
 
+pub fn register_credential(username: &str, register: &str) -> String {
+    // RegisterPublicKeyCredential
+
+    let config = WebauthnEphemeralConfig::new(
+        "relaying_party_name",
+        "relaying_party_origin",
+        "relaying_party_id",
+    );
+    let mut auth = Webauthn::new(config);
+    let result =
+        auth.register_credential(String::from(username), public_key_credential);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
