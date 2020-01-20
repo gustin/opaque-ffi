@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
-use serde_json::Result;
 use webauthn_rs::ephemeral::WebauthnEphemeralConfig;
+use webauthn_rs::error::WebauthnError;
+use webauthn_rs::proto::RegisterPublicKeyCredential;
 use webauthn_rs::*;
 
 /*
@@ -48,6 +49,8 @@ use webauthn_rs::*;
  * values.
 */
 
+/*
+ */
 pub fn registration_challenge(username: &str) -> String {
     let config = WebauthnEphemeralConfig::new(
         "relaying_party_name",
@@ -61,8 +64,13 @@ pub fn registration_challenge(username: &str) -> String {
     json.unwrap()
 }
 
-pub fn register_credential(username: &str, register: &str) -> String {
-    // RegisterPublicKeyCredential
+/*
+ */
+pub fn register_credential(
+    username: &str,
+    credential: &str,
+) -> Result<(), WebauthnError> {
+    println!("Register Credential: {:?}", credential);
 
     let config = WebauthnEphemeralConfig::new(
         "relaying_party_name",
@@ -70,8 +78,13 @@ pub fn register_credential(username: &str, register: &str) -> String {
         "relaying_party_id",
     );
     let mut auth = Webauthn::new(config);
-    let result =
-        auth.register_credential(String::from(username), public_key_credential);
+
+    let registerKey: RegisterPublicKeyCredential =
+        serde_json::from_str(credential).unwrap();
+    println!("Rehydrated register key: {:?}", registerKey);
+    let result = auth.register_credential(registerKey, String::from(username));
+    println!("Result: {:?}", result);
+    result
 }
 
 #[cfg(test)]
@@ -83,5 +96,22 @@ mod tests {
         println!("WebauthN");
         let challenge = registration_challenge("jerryG");
         println!("{:?}", challenge);
+    }
+
+    #[test]
+    fn credential_registration() {
+        let credential = r#"
+            {
+                "id":"Gss9igxU-3iZffReo4citavDk5c6l9YQcsFAK8OPbBTFfTah3sApRZerYS48GzcN",
+                "type":"public-key",
+                "rawId":"W29iamVjdCBBcnJheUJ1ZmZlcl0=",
+                "response":{
+                    "clientDataJSON":"W29iamVjdCBBcnJheUJ1ZmZlcl0=",
+                    "attestationObject":"W29iamVjdCBBcnJheUJ1ZmZlcl0="
+                }
+            }
+        "#;
+        let valid = register_credential("jerryG", credential);
+        println!("{:?}", valid);
     }
 }

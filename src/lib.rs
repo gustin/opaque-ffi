@@ -295,3 +295,26 @@ pub extern "C" fn webauthn_free_challenge(challenge: *mut c_char) {
         CString::from_raw(challenge)
     };
 }
+
+#[no_mangle]
+pub extern "C" fn webauthn_register_credential(
+    username: *mut c_char,
+    credential: *mut c_char,
+) -> bool {
+    let c_username = unsafe {
+        assert!(!username.is_null());
+        CStr::from_ptr(username)
+    };
+    let username = c_username.to_str().unwrap();
+
+    let c_credential = unsafe {
+        assert!(!credential.is_null());
+        CStr::from_ptr(credential)
+    };
+    let credential = c_credential.to_str().unwrap();
+
+    match webauthn::register_credential(username, credential) {
+        Ok(f) => false,
+        Err(e) => true
+    }
+}
