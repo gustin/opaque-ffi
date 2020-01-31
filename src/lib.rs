@@ -179,9 +179,8 @@ pub extern "C" fn authenticate_finalize(
 
 #[no_mangle]
 pub extern "C" fn opaque_client_registration_start(
-    password: *const c_char
-)
--> ClientRegistration {
+    password: *const c_char,
+) -> ClientRegistration {
     let password_c_str = unsafe {
         assert!(!password.is_null());
         CStr::from_ptr(password)
@@ -200,6 +199,63 @@ pub extern "C" fn opaque_client_registration_start(
     }
 }
 
+#[no_mangle]
+pub extern "C" fn opaque_client_registration_finalize(
+    password: *const c_char,
+    beta: *const u8,
+    v: *const u8,
+    pub_u: *const u8,
+    pub_s: *const u8,
+    priv_u: *const u8,
+) -> (*const u8) {
+    let password_c_str = unsafe {
+        assert!(!password.is_null());
+        CStr::from_ptr(password)
+    };
+    let password = password_c_str.to_str().unwrap();
+
+    let defrag: &[u8] = unsafe {
+        assert!(!beta.is_null());
+        slice::from_raw_parts(beta, 32 as usize)
+    };
+    let mut beta: [u8; 32] = [0; 32];
+    beta.copy_from_slice(&defrag[..32]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!v.is_null());
+        slice::from_raw_parts(v, 32 as usize)
+    };
+    let mut v: [u8; 32] = [0; 32];
+    v.copy_from_slice(&defrag[..32]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!pub_u.is_null());
+        slice::from_raw_parts(pub_u, 32 as usize)
+    };
+    let mut pub_u: [u8; 32] = [0; 32];
+    pub_u.copy_from_slice(&defrag[..32]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!pub_s.is_null());
+        slice::from_raw_parts(pub_s, 32 as usize)
+    };
+    let mut pub_s: [u8; 32] = [0; 32];
+    pub_s.copy_from_slice(&defrag[..32]);
+
+    let defrag: &[u8] = unsafe {
+        assert!(!priv_u.is_null());
+        slice::from_raw_parts(priv_u, 32 as usize)
+    };
+    let mut priv_u: [u8; 32] = [0; 32];
+    priv_u.copy_from_slice(&defrag[..32]);
+
+    let envelope = opaque::client_registration_finalize(
+        password, &beta, &v, &pub_u, &pub_s, &priv_u,
+    );
+
+    // LEAK: should box
+    envelope.as_ptr() as *mut u8
+}
 
 #[no_mangle]
 pub extern "C" fn registration_start(
@@ -346,6 +402,6 @@ pub extern "C" fn webauthn_register_credential(
 
     match webauthn::register_credential(username, credential) {
         Ok(f) => false,
-        Err(e) => true
+        Err(e) => true,
     }
 }

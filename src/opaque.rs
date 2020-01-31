@@ -40,10 +40,21 @@ pub fn authenticate_finalize(
     token::generate()
 }
 
-
 pub fn client_registration_start(
-    password: &str
+    password: &str,
 ) -> ([u8; 32], [u8; 32], [u8; 32]) {
     opaque::client::registration_start(password)
 }
 
+pub fn client_registration_finalize(
+    password: &str,
+    beta: &[u8; 32],
+    v: &[u8; 32],
+    pub_u: &[u8; 32],
+    pub_s: &[u8; 32],
+    priv_u: &[u8; 32],
+) -> (Vec<u8>) {
+    opaque::client::registration_finalize(
+        password, beta, v, pub_u, pub_s, priv_u,
+    )
+}
