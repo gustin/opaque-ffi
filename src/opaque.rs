@@ -12,11 +12,6 @@ pub fn registration_start(
     username: &str,
     alpha: &[u8; 32],
 ) -> ([u8; 32], [u8; 32], [u8; 32]) {
-    // opaque client code, call function in lib for now
-    // client_registration_values
-    // then package and post to a url
-
-    // => Registration 1
     opaque::registration_start(username, &alpha)
 }
 
@@ -44,3 +39,11 @@ pub fn authenticate_finalize(
     opaque::authenticate_finalize(username, &key, &x);
     token::generate()
 }
+
+
+pub fn client_registration_start(
+    password: &str
+) -> ([u8; 32], [u8; 32], [u8; 32]) {
+    opaque::client::registration_start(password)
+}
+

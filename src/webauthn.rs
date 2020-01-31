@@ -82,6 +82,7 @@ pub fn register_credential(
     let registerKey: RegisterPublicKeyCredential =
         serde_json::from_str(credential).unwrap();
     println!("Rehydrated register key: {:?}", registerKey);
+    // println!("{:?}", registerKey.id);
     let result = auth.register_credential(registerKey, String::from(username));
     println!("Result: {:?}", result);
     result

@@ -74,6 +74,13 @@ pub struct Registration {
 }
 
 #[repr(C)]
+pub struct ClientRegistration {
+    alpha: *const u8,
+    pub_u: *const u8,
+    priv_u: *const u8,
+}
+
+#[repr(C)]
 pub struct Authentication {
     beta: *const u8,
     v: *const u8,
@@ -169,6 +176,30 @@ pub extern "C" fn authenticate_finalize(
     println!("Token: {:?}", token);
     CString::new(token).unwrap().into_raw()
 }
+
+#[no_mangle]
+pub extern "C" fn opaque_client_registration_start(
+    password: *const c_char
+)
+-> ClientRegistration {
+    let password_c_str = unsafe {
+        assert!(!password.is_null());
+        CStr::from_ptr(password)
+    };
+    let password = password_c_str.to_str().unwrap();
+
+    let (alpha, pub_u, priv_u) = opaque::client_registration_start(password);
+    let alpha = Box::new(alpha);
+    let pub_u = Box::new(pub_u);
+    let priv_u = Box::new(priv_u);
+
+    ClientRegistration {
+        alpha: Box::into_raw(alpha) as *mut u8,
+        pub_u: Box::into_raw(pub_u) as *mut u8,
+        priv_u: Box::into_raw(priv_u) as *mut u8,
+    }
+}
+
 
 #[no_mangle]
 pub extern "C" fn registration_start(
