@@ -207,7 +207,7 @@ pub extern "C" fn opaque_client_registration_finalize(
     pub_u: *const u8,
     pub_s: *const u8,
     priv_u: *const u8,
-) -> (*const u8) {
+) -> *const u8 {
     let password_c_str = unsafe {
         assert!(!password.is_null());
         CStr::from_ptr(password)
